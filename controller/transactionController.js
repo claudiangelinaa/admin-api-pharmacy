@@ -78,3 +78,24 @@ exports.salesReport = async (req, res) => {
     });
   });
 };
+
+exports.selectAllRacikTransaction = async (req, res) => {
+  const selectAllRacikTransactionQuery = `SELECT
+  transaksi.id,
+  users.nama,
+  transaksi.tanggal,
+  transaksi.status,
+  transaksi.resep_image
+    FROM transaksi 
+      JOIN users
+        ON transaksi.user_id = users.id 
+              WHERE transaksi.resep_image IS NOT NULL`
+
+  pool.query(selectAllRacikTransactionQuery, (err, result) => {
+     if (err) {
+      res.status(400).send({ message: err });
+    }
+
+    res.status(200).send({ result: result });
+  });
+}
