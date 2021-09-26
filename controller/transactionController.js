@@ -2,7 +2,9 @@ const pool = require("../config/db");
 const obatJadiModel = require("../model/obatJadiModel");
 
 exports.selectAllTransaction = async (req, res) => {
-    const showTransaction = `SELECT
+  const { date } = req.query;
+
+  const showTransaction = `SELECT
           transaksi.id,
           users.nama AS nama_user,
           obat_jadi.nama,
@@ -16,13 +18,63 @@ exports.selectAllTransaction = async (req, res) => {
               JOIN transaksi_obat_jadi
                 ON transaksi.id = transaksi_obat_jadi.transaksi_id
               JOIN obat_jadi
-                ON obat_jadi.id = transaksi_obat_jadi.obat_jadi_id`
-  
+                ON obat_jadi.id = transaksi_obat_jadi.obat_jadi_id
+                ${date ? `WHERE month(tanggal)=${date}` : ""}`;
+                
+
+  pool.query(showTransaction, (err, result) => {
+    if (err) {
+      res.status(400).send({ message: err });
+    }
+
+    res.status(200).send({ result: result });
+  });
+};
+
+exports.salesReport = async (req, res) => {
+  const { date } = req.query;
+
+  const transactionEachMonth = ` SELECT 
+	  MONTH(tanggal) MONTH,
+	  COUNT(*) as total
+			  FROM transaksi
+				  WHERE status=1
+				  GROUP BY MONTH(tanggal)
+          ORDER BY MONTH(tanggal)`
+
+  const showTransaction = `SELECT
+          transaksi.id,
+          users.nama AS nama_user,
+          obat_jadi.nama,
+          transaksi_obat_jadi.quantity,
+          transaksi.tanggal,
+          transaksi.alamat AS alamat_pengiriman,
+          transaksi.total
+              FROM transaksi 
+              JOIN users
+                    ON transaksi.user_id = users.id 
+              JOIN transaksi_obat_jadi
+                    ON transaksi.id = transaksi_obat_jadi.transaksi_id
+              JOIN obat_jadi
+                    ON obat_jadi.id = transaksi_obat_jadi.obat_jadi_id
+              ${date ? `WHERE month(tanggal)=${date}` : ""}
+              ORDER BY transaksi.id ASC`;
+
+  pool.query(transactionEachMonth, (err, result) => {
+    if (err) {
+      res.status(400).send({ message: err });
+    }
+
+    console.log(result)
+
+    const data = result;
+
     pool.query(showTransaction, (err, result) => {
       if (err) {
         res.status(400).send({ message: err });
       }
-  
-      res.status(200).send({ result: result });
+
+      res.status(200).send({ countTransaction: data, result: result });
     });
-  };
+  });
+};
