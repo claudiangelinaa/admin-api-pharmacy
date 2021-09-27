@@ -17,6 +17,7 @@ router.post("/obatjadi/delete/:id", obatJadiController.delete);
 router.get("/getTransaction", transactionController.selectAllTransaction);
 router.get('/getRacikTransaction', transactionController.selectAllRacikTransaction)
 router.get("/sales-report", transactionController.salesReport);
+router.get("/revenue", transactionController.revenueTransaction);
 
 router.get("/bahanbaku", bahanBakuController.selectAll);
 router.get("/bahanbaku/:id", bahanBakuController.selectByParams);
