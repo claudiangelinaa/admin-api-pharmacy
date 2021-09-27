@@ -1,6 +1,26 @@
 const pool = require("../config/db");
 const obatJadiModel = require("../model/obatJadiModel");
 
+exports.revenueTransaction = async (req, res) => {
+  const { date } = req.query;
+
+  const revenueTransaction = `
+        SELECT
+          COUNT(id) AS total_transaction,
+          SUM(total) AS total_revenue
+          FROM transaksi
+              WHERE ${date ? `MONTH(tanggal)=${date} AND status=1` : "status=1"}
+                ORDER BY status=1;`;
+
+  pool.query(revenueTransaction, (err, result) => {
+    if (err) {
+      res.status(400).send({ message: err });
+    }
+
+    res.status(200).send({ result: result });
+  });
+};
+
 exports.selectAllTransaction = async (req, res) => {
   const { date } = req.query;
 
@@ -20,7 +40,6 @@ exports.selectAllTransaction = async (req, res) => {
               JOIN obat_jadi
                 ON obat_jadi.id = transaksi_obat_jadi.obat_jadi_id
                 ${date ? `WHERE month(tanggal)=${date}` : ""}`;
-                
 
   pool.query(showTransaction, (err, result) => {
     if (err) {
@@ -40,7 +59,7 @@ exports.salesReport = async (req, res) => {
 			  FROM transaksi
 				  WHERE status=1
 				  GROUP BY MONTH(tanggal)
-          ORDER BY MONTH(tanggal)`
+          ORDER BY MONTH(tanggal)`;
 
   const showTransaction = `SELECT
           transaksi.id,
@@ -64,8 +83,6 @@ exports.salesReport = async (req, res) => {
     if (err) {
       res.status(400).send({ message: err });
     }
-
-    console.log(result)
 
     const data = result;
 
