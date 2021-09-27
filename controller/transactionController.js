@@ -15,9 +15,9 @@ exports.revenueTransaction = async (req, res) => {
   pool.query(revenueTransaction, (err, result) => {
     if (err) {
       res.status(400).send({ message: err });
+    } else {
+      res.status(200).send({ result: result });
     }
-
-    res.status(200).send({ result: result });
   });
 };
 
@@ -44,9 +44,9 @@ exports.selectAllTransaction = async (req, res) => {
   pool.query(showTransaction, (err, result) => {
     if (err) {
       res.status(400).send({ message: err });
+    } else {
+      res.status(200).send({ result: result });
     }
-
-    res.status(200).send({ result: result });
   });
 };
 
@@ -89,9 +89,9 @@ exports.salesReport = async (req, res) => {
     pool.query(showTransaction, (err, result) => {
       if (err) {
         res.status(400).send({ message: err });
+      } else {
+        res.status(200).send({ countTransaction: data, result: result });
       }
-
-      res.status(200).send({ countTransaction: data, result: result });
     });
   });
 };
@@ -111,24 +111,43 @@ exports.selectAllRacikTransaction = async (req, res) => {
   pool.query(selectAllRacikTransactionQuery, (err, result) => {
      if (err) {
       res.status(400).send({ message: err });
+    } else {
+      res.status(200).send({ result: result });
     }
-
-    res.status(200).send({ result: result });
   });
 }
 
 exports.insertObatRacikDetailTransaction = async (req, res) => {
   // console.log(req.body, req.params)
-  for (let i =0; i < req.body.payload.length; i++) {
-    const insertObatRacikDetailTransactionQuery = `INSERT INTO transaksi_obat_racik (bahan_baku_id, transaksi_id, komposisi_qty) VALUES (${req.body.payload[i].id},${req.params.id},${req.body.payload[i].qty})`
-    console.log(insertObatRacikDetailTransactionQuery)
+  const updateOrderAcceptedStatusQuery = `UPDATE transaksi SET status = 3 WHERE id = ${req.params.id}`
+  pool.query(updateOrderAcceptedStatusQuery, (err, result) => {
+    if(err) {
+      res.status(400).send({ message: err });
+    } else {
+      for (let i =0; i < req.body.payload.length; i++) {
+        const insertObatRacikDetailTransactionQuery = `INSERT INTO transaksi_obat_racik (bahan_baku_id, transaksi_id, komposisi_qty) VALUES (${req.body.payload[i].id},${req.params.id},${req.body.payload[i].qty})`
+        // console.log(insertObatRacikDetailTransactionQuery)
+    
+        pool.query(insertObatRacikDetailTransactionQuery, (err, result) => {
+          if(err) {
+            res.status(400).send({ message: err });
+          } else {
+            res.status(200).send({ result: result });
+          }
+        });
+      }    
+    }
+  })
+}
 
-    pool.query(insertObatRacikDetailTransactionQuery, (err, result) => {
-      if(err) {
-        res.status(400).send({ message: err });
-      }
+exports.updateTransactionStatus = async (req, res) => {
+  const updateTransactionStatusQuery = `UPDATE transaksi SET status = ${req.body.status} WHERE id = ${req.params.id}`
 
-      res.status(200).send({ result: result });
-    });
-  }
+  pool.query(updateTransactionStatusQuery, (err, result) => {
+    if (err) {
+     res.status(400).send({ message: err });
+   } else {
+     res.status(200).send({ result: result });
+   }
+ });
 }

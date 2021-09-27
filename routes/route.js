@@ -20,6 +20,7 @@ router.get("/sales-report", transactionController.salesReport);
 router.get("/revenue", transactionController.revenueTransaction);
 
 router.post("/insertObatRacikDetailTransaction/:id", transactionController.insertObatRacikDetailTransaction);
+router.post("/updateTransactionStatus/:id", transactionController.updateTransactionStatus);
 
 router.get("/bahanbaku", bahanBakuController.selectAll);
 router.get("/bahanbaku/:id", bahanBakuController.selectByParams);
