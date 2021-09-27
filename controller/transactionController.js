@@ -116,3 +116,19 @@ exports.selectAllRacikTransaction = async (req, res) => {
     res.status(200).send({ result: result });
   });
 }
+
+exports.insertObatRacikDetailTransaction = async (req, res) => {
+  // console.log(req.body, req.params)
+  for (let i =0; i < req.body.payload.length; i++) {
+    const insertObatRacikDetailTransactionQuery = `INSERT INTO transaksi_obat_racik (bahan_baku_id, transaksi_id, komposisi_qty) VALUES (${req.body.payload[i].id},${req.params.id},${req.body.payload[i].qty})`
+    console.log(insertObatRacikDetailTransactionQuery)
+
+    pool.query(insertObatRacikDetailTransactionQuery, (err, result) => {
+      if(err) {
+        res.status(400).send({ message: err });
+      }
+
+      res.status(200).send({ result: result });
+    });
+  }
+}

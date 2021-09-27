@@ -19,6 +19,8 @@ router.get('/getRacikTransaction', transactionController.selectAllRacikTransacti
 router.get("/sales-report", transactionController.salesReport);
 router.get("/revenue", transactionController.revenueTransaction);
 
+router.post("/insertObatRacikDetailTransaction/:id", transactionController.insertObatRacikDetailTransaction);
+
 router.get("/bahanbaku", bahanBakuController.selectAll);
 router.get("/bahanbaku/:id", bahanBakuController.selectByParams);
 router.post("/bahanbaku/insert", bahanBakuController.insert);
