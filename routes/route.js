@@ -4,8 +4,11 @@ const router = express.Router();
 const obatJadiController = require("../controller/obatJadiController");
 const bahanBakuController = require("../controller/bahanBakuController");
 const transactionController = require("../controller/transactionController");
+const obatCustomController = require("../controller/obatCustomController");
 
 router.get("/obatjadi", obatJadiController.selectAll);
+router.get("/obatCustom", obatCustomController.selectAll);
+router.get("/obatCustom/Update", obatCustomController.setMeasurement);
 router.get("/obatjadi/:id", obatJadiController.selectByParams);
 router.post("/obatjadi/insert", obatJadiController.insert);
 router.post("/obatjadi/update/:id", obatJadiController.update);
