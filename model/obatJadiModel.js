@@ -4,7 +4,7 @@ exports.selectAll = (data) =>{
     return new Promise(function(resolve,reject){
         var sql = `SELECT * FROM OBAT_JADI`
         pool.query(sql, [data], (err,result)=>{
-            console.log(err,result);
+            // console.log(err,result);
             if(err) reject(err)
             resolve(result)
         })
