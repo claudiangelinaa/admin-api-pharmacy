@@ -23,9 +23,10 @@ router.post("/insertObatRacikDetailTransaction/:id", transactionController.inser
 router.post("/updateTransactionStatus/:id", transactionController.updateTransactionStatus);
 
 router.get("/bahanbaku", bahanBakuController.selectAll);
-router.get("/bahanbaku/:id", bahanBakuController.selectByParams);
 router.post("/bahanbaku/insert", bahanBakuController.insert);
 router.post("/bahanbaku/update/:id", bahanBakuController.update);
 router.post("/bahanbaku/delete/:id", bahanBakuController.delete);
+router.post("/bahanbaku/:id/update/stock", bahanBakuController.updateStock)
+router.get("/bahanbaku/:id", bahanBakuController.selectByParams);
 
 module.exports = router;

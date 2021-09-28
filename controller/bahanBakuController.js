@@ -1,3 +1,4 @@
+const pool = require('../config/db')
 const bahanBakuModel = require('../model/bahanBakuModel')
 
 exports.selectAll = async(req,res) =>{
@@ -106,5 +107,17 @@ exports.delete = async(req,res) => {
             message: 'Failed to delete data',
             error_message: err
         })
+    })
+}
+
+exports.updateStock = async(req,res) => {
+    const updateStockQuery = `UPDATE bahan_baku SET stock = ${req.body.stock} WHERE id=${req.params.id}`
+
+    pool.query(updateStockQuery, (err, result) => {
+        if (err) {
+            res.status(400).send({ message: err });
+        } else if(result) {
+            res.status(200).send({ result })
+        }
     })
 }
