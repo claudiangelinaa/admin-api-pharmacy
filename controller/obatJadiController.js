@@ -36,8 +36,9 @@ exports.insert = async(req,res) =>{
     let data = {
         nama: req.body.nama,
         deskripsi: req.body.deskripsi,
-        stok: req.body.stok,
+        stock: req.body.stock,
         harga: req.body.harga,
+        kategori: req.body.kategori,
         foto_produk: req.body.foto_produk
     }
     obatJadiModel.insert(data)
@@ -45,8 +46,9 @@ exports.insert = async(req,res) =>{
         res.json({
             nama: req.body.nama,
             deskripsi: req.body.deskripsi,
-            stok: req.body.stok,
+            stock: req.body.stock,
             harga: req.body.harga,
+            kategori: req.body.kategori,
             foto_produk: req.body.foto_produk
         })
     })
@@ -64,8 +66,9 @@ exports.update = async(req,res) =>{
         id: req.params.id,
         nama: req.body.nama,
         deskripsi: req.body.deskripsi,
-        stok: req.body.stok,
+        stock: req.body.stock,
         harga: req.body.harga,
+        kategori: req.body.kategori,
         foto_produk: req.body.foto_produk
     }
     obatJadiModel.update(updatedData)
@@ -73,7 +76,8 @@ exports.update = async(req,res) =>{
         res.json({
             nama: req.body.nama,
             deskripsi: req.body.deskripsi,
-            stok: req.body.stok,
+            stock: req.body.stock,
+            kategori: req.body.kategori,
             harga: req.body.harga,
             foto_produk: req.body.foto_produk
         })
