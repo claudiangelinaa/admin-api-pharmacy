@@ -29,4 +29,6 @@ router.post("/bahanbaku/delete/:id", bahanBakuController.delete);
 router.post("/bahanbaku/:id/update/stock", bahanBakuController.updateStock)
 router.get("/bahanbaku/:id", bahanBakuController.selectByParams);
 
+router.use("/images", express.static("images"));
+
 module.exports = router;

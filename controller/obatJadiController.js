@@ -1,4 +1,7 @@
 const obatJadiModel = require('../model/obatJadiModel')
+const multer = require('../lib/multer')
+const image = require('../helper/image')
+const platform = require('../platform')
 
 exports.selectAll = async(req,res) =>{
     obatJadiModel.selectAll()
@@ -33,61 +36,92 @@ exports.selectByParams = async(req,res) =>{
 }
 
 exports.insert = async(req,res) =>{
-    let data = {
-        nama: req.body.nama,
-        deskripsi: req.body.deskripsi,
-        stock: req.body.stock,
-        harga: req.body.harga,
-        kategori: req.body.kategori,
-        foto_produk: req.body.foto_produk
-    }
-    obatJadiModel.insert(data)
-    .then((result)=>{
-        res.json({
-            nama: req.body.nama,
-            deskripsi: req.body.deskripsi,
-            stock: req.body.stock,
-            harga: req.body.harga,
-            kategori: req.body.kategori,
-            foto_produk: req.body.foto_produk
+    console.log(req.body)
+    // console.log("req body:", JSON.parse(req.body.data))
+
+    let fileName = image.generateImageFileName('PRODUCT_IMG')
+    let filePath = `/product`
+    
+    let next = multer.uploadImage(filePath, fileName)
+    next(req,res, (err) => {
+        if (err) {
+            console.log(err)
+            res.status(500).json({
+                status: 'error',
+                message: 'failed to upload',
+                error_message: err
+            })
+        }
+
+        let parsedData = JSON.parse(req.body.data)
+        let data = {
+            nama: parsedData.nama,
+            deskripsi: parsedData.deskripsi,
+            stock: parsedData.stock,
+            harga: parsedData.harga,
+            kategori: parsedData.kategori,
+            foto_produk: `http://${platform.baseURL}:${platform.port}/images${filePath}/${fileName}`
+        }
+        console.log(data)
+        obatJadiModel.insert(data)
+        .then((result)=>{
+            res.json({
+                data
+            })
         })
-    })
-    .catch(err=>{
-        res.json({
-            status: 'error',
-            message: 'failed to insert data',
-            error_message: err
+        .catch(err=>{
+            res.json({
+                status: 'error',
+                message: 'failed to insert data',
+                error_message: err
+            })
         })
+        
     })
+    
 }
 
 exports.update = async(req,res) =>{
-    let updatedData = {
-        id: req.params.id,
-        nama: req.body.nama,
-        deskripsi: req.body.deskripsi,
-        stock: req.body.stock,
-        harga: req.body.harga,
-        kategori: req.body.kategori,
-        foto_produk: req.body.foto_produk
-    }
-    obatJadiModel.update(updatedData)
-    .then((result)=>{
-        res.json({
-            nama: req.body.nama,
-            deskripsi: req.body.deskripsi,
-            stock: req.body.stock,
-            kategori: req.body.kategori,
-            harga: req.body.harga,
-            foto_produk: req.body.foto_produk
+    let fileName = image.generateImageFileName('PRODUCT_IMG')
+    let filePath = `/product`
+    
+    let next = multer.uploadImage(filePath, fileName)
+    next(req,res, (err) => {
+        if (err) {
+            console.log(err)
+            res.status(500).json({
+                status: 'error',
+                message: 'failed to upload',
+                error_message: err
+            })
+            return
+        }
+
+        let parsedData = JSON.parse(req.body.data)
+        let data = {
+            id: req.params.id,
+            nama: parsedData.nama,
+            deskripsi: parsedData.deskripsi,
+            stock: parsedData.stock,
+            harga: parsedData.harga,
+            kategori: parsedData.kategori,
+            foto_produk: `http://${platform.baseURL}:${platform.port}/images${filePath}/${fileName}`
+        }
+        console.log(data)
+        obatJadiModel.update(data)
+        .then((result)=>{
+            res.json({
+                data
+            })
         })
-    })
-    .catch(err=>{
-        res.json({
-            status: 'error',
-            message: 'failed to update data',
-            error_message: err
+        .catch(err=>{
+            res.json({
+                status: 'error',
+                message: 'failed to insert data',
+                error_message: err
+            })
         })
+        
     })
 }
 
