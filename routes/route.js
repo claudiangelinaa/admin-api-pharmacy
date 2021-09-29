@@ -8,7 +8,7 @@ const transactionController = require("../controller/transactionController");
 const obatCustomController = require("../controller/obatCustomController");
 
 router.post("/users/login", authController.login);
-router.get("/users/check-token", authController.checkToken)
+router.get("/users/check-token", authController.checkToken);
 
 router.get("/obatjadi", obatJadiController.selectAll);
 router.get("/obatjadi/category", obatJadiController.getCategory);
