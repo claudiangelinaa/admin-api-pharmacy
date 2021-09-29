@@ -104,12 +104,12 @@ exports.selectAllRacikTransaction = async (req, res) => {
   transaksi.tanggal,
   transaksi.status,
   transaksi.resep_image,
-  transaksi_obat_racik.komposisi_quantity
+  transaksi_obat_racik.komposisi_qty
     FROM transaksi 
       JOIN users
         ON transaksi.user_id = users.id 
       JOIN transaksi_obat_racik
-        ON transaksi_obat_racik.transaksi_ids = transaksi.id 
+        ON transaksi_obat_racik.transaksi_id = transaksi.id 
               WHERE transaksi.resep_image IS NOT NULL`;
 
   pool.query(selectAllRacikTransactionQuery, (err, result) => {
