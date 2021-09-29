@@ -112,7 +112,6 @@ exports.selectAllRacikTransaction = async (req, res) => {
               WHERE transaksi.resep_image IS NOT NULL`;
 
   pool.query(selectAllRacikTransactionQuery, (err, result) => {
-    console.log(err, result)
     if (err) {
       res.status(400).send({ message: err });
     } else {
