@@ -35,7 +35,7 @@ router.post(
 );
 
 router.get("/obatCustom", obatCustomController.selectAll);
-router.get("/obatCustom/Update", obatCustomController.setMeasurement);
+router.post("/obatCustom/Update", obatCustomController.setMeasurement);
 
 router.get("/bahanbaku", bahanBakuController.selectAll);
 router.get("/bahanbaku/getUsage", bahanBakuController.selectAllRacikUsageOrder);
