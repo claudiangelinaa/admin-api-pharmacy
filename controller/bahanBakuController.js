@@ -130,13 +130,13 @@ exports.selectAllRacikUsageOrder = async (req, res) => {
     transaksi.id,
     users.nama AS name_user,
     transaksi.tanggal,
-    transaksi_obat_racik.komposisi_quantity,
+    transaksi_obat_racik.komposisi_qty,
     bahan_baku.nama
       FROM transaksi 
         JOIN users
           ON transaksi.user_id = users.id
         JOIN transaksi_obat_racik
-          ON transaksi_obat_racik.transaksi_ids = transaksi.id
+          ON transaksi_obat_racik.transaksi_id = transaksi.id
         JOIN bahan_baku
           ON bahan_baku.id = transaksi_obat_racik.bahan_baku_id
                 WHERE transaksi.resep_image IS NOT NULL`;
