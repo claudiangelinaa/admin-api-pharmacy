@@ -119,23 +119,31 @@ exports.selectAllRacikTransaction = async (req, res) => {
 
 exports.insertObatRacikDetailTransaction = async (req, res) => {
   // console.log(req.body, req.params)
-  const updateOrderAcceptedStatusQuery = `UPDATE transaksi SET status = 3 WHERE id = ${req.params.id}`
+  let totalHarga = 0
+  
+  for (let i =0; i < req.body.payload.length; i++) {
+    const insertObatRacikDetailTransactionQuery = `INSERT INTO transaksi_obat_racik (bahan_baku_id, transaksi_id, komposisi_qty) VALUES (${req.body.payload[i].id},${req.params.id},${req.body.payload[i].qty})`
+    // console.log(insertObatRacikDetailTransactionQuery)
+
+    totalHarga += req.body.payload[i].harga
+
+    pool.query(insertObatRacikDetailTransactionQuery, (err, result) => {
+      if(err) {
+        res.status(400).send({ message: err });
+        return;
+      } else {
+        console.log("sukses insert", i, result)
+      }
+    });
+  }
+
+  const updateOrderAcceptedStatusQuery = `UPDATE transaksi SET status = 3, total = ${totalHarga} WHERE id = ${req.params.id}`
+
   pool.query(updateOrderAcceptedStatusQuery, (err, result) => {
     if(err) {
       res.status(400).send({ message: err });
     } else {
-      for (let i =0; i < req.body.payload.length; i++) {
-        const insertObatRacikDetailTransactionQuery = `INSERT INTO transaksi_obat_racik (bahan_baku_id, transaksi_id, komposisi_qty) VALUES (${req.body.payload[i].id},${req.params.id},${req.body.payload[i].qty})`
-        // console.log(insertObatRacikDetailTransactionQuery)
-    
-        pool.query(insertObatRacikDetailTransactionQuery, (err, result) => {
-          if(err) {
-            res.status(400).send({ message: err });
-          } else {
-            res.status(200).send({ result: result });
-          }
-        });
-      }    
+      res.status(200).send({ result: result });
     }
   })
 }
