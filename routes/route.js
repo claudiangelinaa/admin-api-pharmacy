@@ -7,6 +7,7 @@ const bahanBakuController = require("../controller/bahanBakuController");
 const transactionController = require("../controller/transactionController");
 
 router.post("/users/login", authController.login);
+router.get("/users/check-token", authController.checkToken)
 
 router.get("/obatjadi", obatJadiController.selectAll);
 router.get("/obatjadi/category", obatJadiController.getCategory);
