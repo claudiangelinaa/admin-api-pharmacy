@@ -33,3 +33,10 @@ exports.login = async (req, res) => {
       });
     });
 };
+
+exports.checkToken = async (req, res) => {
+  // console.log(req.headers)
+  let loginData = jwt.Decode(req.headers.authorization);
+  // console.log(loginData)
+  res.json(loginData);
+};
