@@ -9,6 +9,7 @@ const transactionController = require("../controller/transactionController");
 router.post("/users/login", authController.login);
 
 router.get("/obatjadi", obatJadiController.selectAll);
+router.get("/obatjadi/category", obatJadiController.getCategory);
 router.get("/obatjadi/:id", obatJadiController.selectByParams);
 router.post("/obatjadi/insert", obatJadiController.insert);
 router.post("/obatjadi/update/:id", obatJadiController.update);
