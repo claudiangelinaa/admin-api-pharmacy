@@ -10,8 +10,8 @@ exports.revenueTransaction = async (req, res) => {
           SUM(total) AS total_revenue
           FROM transaksi
               WHERE ${date ? `MONTH(tanggal)=${date} AND status=4` : "status=4"}
-                ORDER BY status=1;`;
-
+                ORDER BY status=4;`
+  
   pool.query(revenueTransaction, (err, result) => {
     if (err) {
       res.status(400).send({ message: err });
@@ -57,7 +57,7 @@ exports.salesReport = async (req, res) => {
 	  MONTH(tanggal) MONTH,
 	  COUNT(*) as total
 			  FROM transaksi
-				  WHERE status=1
+				  WHERE status=4
 				  GROUP BY MONTH(tanggal)
           ORDER BY MONTH(tanggal)`;
 
@@ -82,6 +82,7 @@ exports.salesReport = async (req, res) => {
   pool.query(transactionEachMonth, (err, result) => {
     if (err) {
       res.status(400).send({ message: err });
+      return;
     }
 
     const data = result;
@@ -102,22 +103,28 @@ exports.selectAllRacikTransaction = async (req, res) => {
   users.nama,
   transaksi.tanggal,
   transaksi.status,
-  transaksi.resep_image
+  transaksi.resep_image,
+  transaksi_obat_racik.komposisi_quantity
     FROM transaksi 
       JOIN users
         ON transaksi.user_id = users.id 
-              WHERE transaksi.resep_image IS NOT NULL`
+      JOIN transaksi_obat_racik
+        ON transaksi_obat_racik.transaksi_ids = transaksi.id 
+              WHERE transaksi.resep_image IS NOT NULL`;
 
   pool.query(selectAllRacikTransactionQuery, (err, result) => {
-     if (err) {
+    if (err) {
       res.status(400).send({ message: err });
     } else {
       res.status(200).send({ result: result });
     }
   });
-}
+};
 
 exports.insertObatRacikDetailTransaction = async (req, res) => {
+// <<<<<<< feature/raw-usage-order
+//   const updateOrderAcceptedStatusQuery = `UPDATE transaksi SET status = 3 WHERE id = ${req.params.id}`;
+// =======
   // console.log(req.body, req.params)
   let totalHarga = 0
   
@@ -140,22 +147,33 @@ exports.insertObatRacikDetailTransaction = async (req, res) => {
   const updateOrderAcceptedStatusQuery = `UPDATE transaksi SET status = 3, total = ${totalHarga} WHERE id = ${req.params.id}`
 
   pool.query(updateOrderAcceptedStatusQuery, (err, result) => {
-    if(err) {
+    if (err) {
+      res.status(400).send({ message: err });
+    } else {
+//       for (let i = 0; i < req.body.payload.length; i++) {
+//         const insertObatRacikDetailTransactionQuery = `INSERT INTO transaksi_obat_racik (bahan_baku_id, transaksi_id, komposisi_qty) VALUES (${req.body.payload[i].id},${req.params.id},${req.body.payload[i].qty})`;
+
+//         pool.query(insertObatRacikDetailTransactionQuery, (err, result) => {
+//           if (err) {
+//             res.status(400).send({ message: err });
+//           } else {
+//             res.status(200).send({ result: result });
+//           }
+//         });
+//       }
+      res.status(200).send({ result: result });
+    }
+  });
+};
+
+exports.updateTransactionStatus = async (req, res) => {
+  const updateTransactionStatusQuery = `UPDATE transaksi SET status = ${req.body.status} WHERE id = ${req.params.id}`;
+
+  pool.query(updateTransactionStatusQuery, (err, result) => {
+    if (err) {
       res.status(400).send({ message: err });
     } else {
       res.status(200).send({ result: result });
     }
-  })
-}
-
-exports.updateTransactionStatus = async (req, res) => {
-  const updateTransactionStatusQuery = `UPDATE transaksi SET status = ${req.body.status} WHERE id = ${req.params.id}`
-
-  pool.query(updateTransactionStatusQuery, (err, result) => {
-    if (err) {
-     res.status(400).send({ message: err });
-   } else {
-     res.status(200).send({ result: result });
-   }
- });
-}
+  });
+};
