@@ -5,6 +5,7 @@ const authController = require("../controller/authController");
 const obatJadiController = require("../controller/obatJadiController");
 const bahanBakuController = require("../controller/bahanBakuController");
 const transactionController = require("../controller/transactionController");
+const obatCustomController = require("../controller/obatCustomController");
 
 router.post("/users/login", authController.login);
 router.get("/users/check-token", authController.checkToken)
@@ -23,6 +24,9 @@ router.get("/revenue", transactionController.revenueTransaction);
 
 router.post("/insertObatRacikDetailTransaction/:id", transactionController.insertObatRacikDetailTransaction);
 router.post("/updateTransactionStatus/:id", transactionController.updateTransactionStatus);
+
+router.get("/obatCustom", obatCustomController.selectAll);
+router.get("/obatCustom/Update", obatCustomController.setMeasurement);
 
 router.get("/bahanbaku", bahanBakuController.selectAll);
 router.post("/bahanbaku/insert", bahanBakuController.insert);
