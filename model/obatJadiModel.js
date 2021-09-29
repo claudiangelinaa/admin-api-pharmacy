@@ -11,6 +11,17 @@ exports.selectAll = (data) =>{
     })
 }
 
+exports.getCategory = (data) =>{
+    return new Promise(function(resolve,reject){
+        var sql = `SELECT DISTINCT KATEGORI FROM OBAT_JADI `
+        pool.query(sql, [data], (err,result)=>{
+            console.log(err,result);
+            if(err) reject(err)
+            resolve(result)
+        })
+    })
+}
+
 exports.selectByParams = (data) =>{
     return new Promise(function(resolve,reject){
         var sql = `SELECT * FROM OBAT_JADI WHERE ID=${data.id}`
