@@ -9,7 +9,7 @@ exports.revenueTransaction = async (req, res) => {
           COUNT(id) AS total_transaction,
           SUM(total) AS total_revenue
           FROM transaksi
-              WHERE ${date ? `MONTH(tanggal)=${date} AND status=1` : "status=1"}
+              WHERE ${date ? `MONTH(tanggal)=${date} AND status=4` : "status=4"}
                 ORDER BY status=1;`;
 
   pool.query(revenueTransaction, (err, result) => {
