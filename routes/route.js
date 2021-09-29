@@ -26,7 +26,7 @@ router.post("/insertObatRacikDetailTransaction/:id", transactionController.inser
 router.post("/updateTransactionStatus/:id", transactionController.updateTransactionStatus);
 
 router.get("/obatCustom", obatCustomController.selectAll);
-router.get("/obatCustom/Update", obatCustomController.setMeasurement);
+router.post("/obatCustom/Update", obatCustomController.setMeasurement);
 
 router.get("/bahanbaku", bahanBakuController.selectAll);
 router.post("/bahanbaku/insert", bahanBakuController.insert);
